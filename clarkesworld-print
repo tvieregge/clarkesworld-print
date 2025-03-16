@@ -1,0 +1,28 @@
+#! /bin/bash
+# Take file as a param:
+# https://stackoverflow.com/questions/965053/extract-filename-and-extension-in-bash
+
+set -e
+
+if [ "$#" -ne 2 ]; then
+    echo "Takes two args: the epub/mobi file for a clarkesworld issue and the name of the printer."
+    echo "Usage: clarkesworld-print FILE PRINTER_NAME"
+    echo "Ex: clarkesworld-print clarkesworld_222.mobi brother-bw"
+fi
+
+
+filename=$1
+printer_name=$2
+base_name=${filename%.*}
+pdf_name=$base_name.pdf
+clipped_name=$base_name-clipped.pdf
+book_name=$base_name-clipped-book.pdf
+
+ebook-convert $filename $pdf_name --paper-size=legal --pdf-default-font-size=20 --pdf-mono-font-size=16 --pdf-page-margin-bottom=0 --pdf-page-margin-left=0 --pdf-page-margin-right=0 --pdf-page-margin-top=0
+
+# might be able to avoid this by specifying page list while printing
+pdftk $pdf_name cat 1-r17 output $clipped_name
+
+pdfbook2 --paper=letterpapper -i 120 -o 30  $clipped_name
+
+lp -d $printer_name -o sides=two-sided-long-edge $book_name
