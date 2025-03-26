@@ -2,6 +2,9 @@
 
 A small utility to print ebook files from [Clarkesworld Magazine](https://clarkesworldmagazine.com/) in booklet form.
 
+BUGS:
+- Doesn't work with filenames that have spaces
+
 TODO:
 - Images on printing and stapling process
 - Option for how many pages at the end to skip
